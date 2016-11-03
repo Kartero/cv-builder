@@ -1,6 +1,27 @@
 $(document).ready(function() {
 	addField("personal");
+	addStaticField("jobs");
 });
+
+function addStaticField( classPrefix ) {
+	$("#save-" + classPrefix).click(function() {
+		var count = $("." + classPrefix).length;
+		$.get({
+			method: 'GET',
+		    url: 'templates/static-template.php',
+		    headers: {
+		        'Content-Type': 'application/json',
+		    },
+		    data: {
+		        classPrefix: classPrefix,
+		        count: count
+		    }
+		}).done(function(field) {
+			$("#" + classPrefix + "-empty").append(field);
+		});
+	})
+	
+}
 
 function addField( classPrefix ) {
 	// General function to add new fields to form
@@ -24,10 +45,13 @@ function addField( classPrefix ) {
 		var field = "";
 		if (type === "textarea") {
 			field = textAreaField(name, title, id, formClass);
+		} else if (type === "jobs") {
+			field = textAreaField(name, title, id, formClass);
 		} else {
 			field = inputField(name, type, id, title, formClass);
 		}	
-		$("." + classPrefix + "-empty").append(field);
+		$("#" + classPrefix + "-empty").append(field);
+		
 	});
 
 }
